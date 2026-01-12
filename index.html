@@ -2,226 +2,253 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Sensi CLN — Key Generator</title>
+<title>Sensi CLN</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+:root{
+  --bg:#0b0203;
+  --panel:#140405;
+  --red:#c1121f;
+  --red-2:#8a0e14;
+  --txt:#f5f5f5;
+  --muted:#c9a1a4;
+  --ok:#3ddc97;
 }
 
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #1a0000, #000);
-  color: #fff;
+*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Arial}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(1200px 600px at 10% -10%, #2a070a, transparent),
+             linear-gradient(180deg,#070102,#120304 60%,#070102);
+  color:var(--txt);
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.panel {
-  max-width: 1200px;
-  margin: 40px auto;
-  background: rgba(10,0,0,0.85);
-  border-radius: 14px;
-  box-shadow: 0 0 40px rgba(255,0,0,0.25);
-  padding: 25px;
+.card{
+  width:100%;
+  max-width:980px;
+  background:linear-gradient(180deg,#180405,#0f0203);
+  border:1px solid #2a070a;
+  border-radius:14px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  overflow:hidden;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 20px;
-  margin-bottom: 20px;
+header{
+  padding:18px 22px;
+  border-bottom:1px solid #2a070a;
+  display:flex;
+  gap:10px;
+  align-items:center;
 }
 
-.header::before {
-  content: "●";
-  color: red;
+.dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 14px var(--red);
 }
 
-.content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 25px;
+.grid{
+  display:grid;
+  grid-template-columns:320px 1fr;
 }
 
-.section {
-  background: rgba(0,0,0,0.6);
-  border-radius: 12px;
-  padding: 20px;
+aside{
+  border-right:1px solid #2a070a;
+  padding:22px;
 }
 
-.section h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  font-size: 16px;
-  color: #ff3c3c;
+main{
+  padding:22px;
 }
 
-input, select, button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background: #120000;
-  border: 1px solid #400000;
-  border-radius: 8px;
-  color: #fff;
+.title{
+  font-size:14px;
+  color:#ffd1d4;
+  margin-bottom:8px;
 }
 
-button {
-  cursor: pointer;
-  background: linear-gradient(135deg, #8b0000, #c10000);
-  transition: 0.2s;
+.desc{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:14px;
 }
 
-button:hover {
-  background: linear-gradient(135deg, #a00000, #ff1a1a);
-  transform: scale(1.02);
+.field{
+  margin-bottom:12px;
 }
 
-.key-box {
-  border: 1px solid #400000;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  background: rgba(0,0,0,0.7);
+label{
+  font-size:12px;
+  color:#ffd1d4;
+  display:block;
+  margin-bottom:6px;
 }
 
-.key-box small {
-  color: #ff7777;
+input,select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #3b0a0e;
+  background:#0a0203;
+  color:var(--txt);
 }
 
-.clear-keys-btn {
-  width: auto;
-  padding: 8px 14px;
-  font-size: 13px;
-  float: right;
-  margin-bottom: 10px;
-  box-shadow: 0 0 10px rgba(255,0,0,0.3);
+.btn{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #3b0a0e;
+  background:linear-gradient(180deg,var(--red),var(--red-2));
+  color:#fff;
+  cursor:pointer;
 }
 
-.footer {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #aaa;
-  display: flex;
-  justify-content: space-between;
+.btn.secondary{
+  background:#120304;
+  color:#ffd1d4;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  background:#0a0203;
+  border:1px solid #2a070a;
+  border-radius:12px;
+  padding:12px;
+}
+
+.item .k{
+  font-family:Consolas,monospace;
+}
+
+.clear-btn{
+  margin-bottom:12px;
+  background:#120304;
+  color:#ffd1d4;
+}
+
+footer{
+  padding:14px 22px;
+  border-top:1px solid #2a070a;
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
 }
 </style>
 </head>
 
 <body>
 
-<div class="panel">
-  <div class="header">Sensi CLN</div>
+<div class="card">
+  <header>
+    <span class="dot"></span>
+    <strong>Sensi CLN</strong>
+  </header>
 
-  <div class="content">
+  <div class="grid">
 
     <!-- GERADOR -->
-    <div class="section">
-      <h3>Key Generator</h3>
+    <aside>
+      <div class="title">Key Generator</div>
+      <div class="desc">CLN-PLANO-XXXX-XXXX-XXXX</div>
 
-      <label>Prefixo</label>
-      <input id="prefix" value="CLN" disabled>
+      <div class="field">
+        <label>Prefixo</label>
+        <input value="CLN" disabled>
+      </div>
 
-      <label>Plano</label>
-      <select id="plan">
-        <option value="SEMANAL">Semanal</option>
-        <option value="MENSAL">Mensal</option>
-        <option value="LIFETIME">Lifetime</option>
-      </select>
+      <div class="field">
+        <label>Plano</label>
+        <select id="plan">
+          <option value="SEMANAL">Semanal</option>
+          <option value="MENSAL">Mensal</option>
+          <option value="LIFETIME">Lifetime</option>
+        </select>
+      </div>
 
-      <button onclick="generateKey()">Gerar Key</button>
-    </div>
+      <button class="btn" onclick="generate()">Gerar Key</button>
+    </aside>
 
-    <!-- VALIDAÇÃO / LISTA -->
-    <div class="section">
-      <h3>
-        Keys Geradas
-        <button class="clear-keys-btn" onclick="clearKeys()">Excluir todas</button>
-      </h3>
+    <!-- LISTA -->
+    <main>
+      <div class="title">Keys Geradas</div>
 
-      <div id="keysList"></div>
-    </div>
+      <button class="btn clear-btn" onclick="clearAll()">Excluir todas as keys</button>
+
+      <div id="list" class="list"></div>
+    </main>
 
   </div>
 
-  <div class="footer">
+  <footer>
     <span>Modo privado ativo</span>
-    <span id="date"></span>
-  </div>
+    <span id="now"></span>
+  </footer>
 </div>
 
 <script>
-const keysList = document.getElementById("keysList");
+const STORAGE = "cln_keys";
 
-function randomBlock(size) {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let r = "";
-  for (let i = 0; i < size; i++) {
-    r += chars[Math.floor(Math.random() * chars.length)];
+function rnd(){
+  const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join("");
+}
+
+function generate(){
+  const plan=document.getElementById("plan").value;
+  const key=`CLN-${plan}-${rnd()}-${rnd()}-${rnd()}`;
+
+  let exp="Lifetime";
+  if(plan==="SEMANAL"){
+    const d=new Date(); d.setDate(d.getDate()+7);
+    exp=d.toLocaleDateString("pt-BR");
   }
-  return r;
+  if(plan==="MENSAL"){
+    const d=new Date(); d.setMonth(d.getMonth()+1);
+    exp=d.toLocaleDateString("pt-BR");
+  }
+
+  const data={key,plan,exp};
+  const keys=JSON.parse(localStorage.getItem(STORAGE)||"[]");
+  keys.unshift(data);
+  localStorage.setItem(STORAGE,JSON.stringify(keys));
+  render();
 }
 
-function getExpiration(plan) {
-  if (plan === "LIFETIME") return "Lifetime";
+function render(){
+  const list=document.getElementById("list");
+  list.innerHTML="";
+  const keys=JSON.parse(localStorage.getItem(STORAGE)||"[]");
 
-  const now = new Date();
-  if (plan === "SEMANAL") now.setDate(now.getDate() + 7);
-  if (plan === "MENSAL") now.setMonth(now.getMonth() + 1);
-
-  return now.toLocaleDateString("pt-BR");
-}
-
-function generateKey() {
-  const prefix = "CLN";
-  const plan = document.getElementById("plan").value;
-
-  const key =
-    `${prefix}-${plan}-` +
-    `${randomBlock(4)}-${randomBlock(4)}-${randomBlock(4)}`;
-
-  const exp = getExpiration(plan);
-
-  const data = {
-    key,
-    plan,
-    exp
-  };
-
-  const saved = JSON.parse(localStorage.getItem("generatedKeys") || "[]");
-  saved.unshift(data);
-  localStorage.setItem("generatedKeys", JSON.stringify(saved));
-
-  renderKeys();
-}
-
-function renderKeys() {
-  keysList.innerHTML = "";
-  const saved = JSON.parse(localStorage.getItem("generatedKeys") || "[]");
-
-  saved.forEach(k => {
-    const div = document.createElement("div");
-    div.className = "key-box";
-    div.innerHTML = `
-      <strong>${k.key}</strong><br>
-      <small>${k.plan} • Expira em: ${k.exp}</small>
-    `;
-    keysList.appendChild(div);
+  keys.forEach(k=>{
+    const div=document.createElement("div");
+    div.className="item";
+    div.innerHTML=`<div class="k">${k.key}</div>
+    <small>${k.plan} • Expira em: ${k.exp}</small>`;
+    list.appendChild(div);
   });
+
+  document.getElementById("now").innerText=
+    new Date().toLocaleString("pt-BR");
 }
 
-function clearKeys() {
-  if (!confirm("Tem certeza que deseja excluir TODAS as keys?")) return;
-  localStorage.removeItem("generatedKeys");
-  renderKeys();
-  alert("Todas as keys foram excluídas.");
+function clearAll(){
+  if(!confirm("Excluir TODAS as keys?")) return;
+  localStorage.removeItem(STORAGE);
+  render();
 }
 
-document.getElementById("date").innerText =
-  new Date().toLocaleString("pt-BR");
-
-renderKeys();
+render();
 </script>
 
 </body>
