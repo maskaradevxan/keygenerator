@@ -1,214 +1,39 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bypass CLN • Gerador de Keys</title>
-
-  <style>
-    :root{
-      --red:#c1121f;
-      --red-2:#8a0e14;
-      --txt:#f5f5f5;
-      --muted:#c9a1a4;
-      --ok:#3ddc97;
-    }
-    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-    body{
-      margin:0;min-height:100vh;
-      background:linear-gradient(180deg,#070102,#120304 60%,#070102);
-      color:var(--txt);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .wrap{width:100%;max-width:980px;padding:24px}
-    .card{
-      background:#0f0203;
-      border:1px solid #2a070a;
-      border-radius:14px;
-      overflow:hidden;
-    }
-    header{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid #2a070a;
-    }
-    .brand{display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
-    h1{font-size:18px;margin:0}
-
-    .grid{display:grid;grid-template-columns:320px 1fr}
-    aside{border-right:1px solid #2a070a;background:#0c0203}
-    main{padding:22px}
-    .pane{padding:22px}
-
-    .title{font-size:14px;color:#ffd1d4;margin-bottom:8px}
-    .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
-
-    .field{margin-bottom:12px}
-    .field label{font-size:12px;color:#ffd1d4}
-    .field input,.field select{
-      width:100%;padding:10px;border-radius:10px;
-      border:1px solid #3b0a0e;background:#0a0203;color:#fff
-    }
-
-    .btn{
-      width:100%;
-      padding:10px;border-radius:12px;
-      border:1px solid #3b0a0e;
-      background:linear-gradient(180deg,var(--red),var(--red-2));
-      color:#fff;cursor:pointer;margin-bottom:8px
-    }
-    .btn.secondary{
-      background:#120304;color:#ffd1d4
-    }
-    .btn.danger{
-      background:#2a070a;
-      border-color:#5c0f15;
-      color:#ffd1d4;
-    }
-
-    .list{display:grid;gap:10px}
-    .item{background:#0a0203;border:1px solid #2a070a;border-radius:12px;padding:12px}
-    .k{font-family:Consolas,monospace}
-
-    .hidden{display:none}
-    .ok{color:var(--ok)}
-    .warn{color:#ffd1d4}
-
-    footer{
-      padding:12px 20px;border-top:1px solid #2a070a;
-      display:flex;justify-content:space-between;font-size:12px;color:var(--muted)
-    }
-  </style>
-</head>
-
-<body>
-<div class="wrap">
-<div class="card">
-
-<header>
-  <div class="brand">
-    <span class="dot"></span>
-    <h1>Sensi CLN</h1>
-  </div>
-</header>
-
-<!-- LOGIN -->
-<section id="login" class="pane">
-  <div class="title">Acesso restrito</div>
-  <div class="desc">Login de administrador</div>
-
-  <div class="field">
-    <label>Usuário</label>
-    <input id="u">
-  </div>
-  <div class="field">
-    <label>Senha</label>
-    <input id="p" type="password">
-  </div>
-
-  <button class="btn" onclick="login()">Entrar</button>
-  <div id="lmsg" class="desc"></div>
-</section>
-
-<!-- PAINEL -->
-<section id="panel" class="hidden">
-<div class="grid">
-
-<aside>
-  <div class="pane">
-    <div class="title">Key Generator</div>
-    <div class="desc">CLN-PLANO-XXXXX-XXXXX-XXXXX</div>
-
-    <div class="field">
-      <label>Prefixo</label>
-      <input id="prefix" value="CLN">
-    </div>
-
-    <div class="field">
-      <label>Plano</label>
-      <select id="exp">
-        <option value="7" data-tag="SEMANAL">Semanal</option>
-        <option value="30" data-tag="MENSAL">Mensal</option>
-        <option value="0" data-tag="LIFETIME">Lifetime</option>
-      </select>
-    </div>
-
-    <button class="btn" onclick="generate()">Gerar Key</button>
-
-<a href="https://github.com/maskaradevxan/keyauth/edit/main/keys.txt"
-   target="_blank"
-   rel="noopener noreferrer">
-  <button class="btn secondary">Editar keys.txt</button>
-</a>
-
-    <!-- 🔥 EXCLUIR TODAS AS KEYS -->
-    <button class="btn danger" onclick="clearAllKeys()">
-      Excluir todas as keys
-    </button>
-  </div>
-</aside>
-
-<main>
-  <div class="title">Validação</div>
-
-  <input id="check" placeholder="CLN-SEMANAL-XXXXX-XXXXX-XXXXX">
-  <br><br>
-  <button class="btn secondary" onclick="validate()">Validar</button>
-
-  <div id="vmsg" class="desc"></div>
-
-  <hr style="border:0;border-top:1px solid #2a070a;margin:18px 0">
-
-  <div class="title">Keys Geradas</div>
-  <div id="list" class="list"></div>
-</main>
-
-</div>
-
-<footer>
-  <span>Modo privado ativo</span>
-  <span id="now"></span>
-</footer>
-</section>
-
-</div>
-</div>
-
 <script>
-const ADMIN_USER='celes';
-const ADMIN_PASS='clean';
+const ADMIN_USER = 'celes';
+const ADMIN_PASS = 'clean';
 
-const storeKey='cln_keys_v1';
-let keys=JSON.parse(localStorage.getItem(storeKey)||'[]');
-const $=id=>document.getElementById(id);
+const storeKey = 'cln_keys_v1';
+let keys = JSON.parse(localStorage.getItem(storeKey) || '[]');
+const $ = id => document.getElementById(id);
 
-function login(){
-  if($('u').value===ADMIN_USER && $('p').value===ADMIN_PASS){
+function login() {
+  if ($('u').value === ADMIN_USER && $('p').value === ADMIN_PASS) {
     $('login').classList.add('hidden');
     $('panel').classList.remove('hidden');
     render();
-  }else $('lmsg').textContent='Credenciais inválidas';
+  } else $('lmsg').textContent = 'Credenciais inválidas';
 }
 
-function rnd(){
-  const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  return Array.from({length:5},()=>a[Math.floor(Math.random()*a.length)]).join('');
+function rnd() {
+  const a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return Array.from({ length: 5 }, () =>
+    a[Math.floor(Math.random() * a.length)]
+  ).join('');
 }
 
-function generate(){
-  const p=$('prefix').value.toUpperCase();
-  const s=$('exp');
-  const d=parseInt(s.value);
-  const tag=s.options[s.selectedIndex].dataset.tag;
-  const exp=d===0?null:Date.now()+d*86400000;
+function generate() {
+  const p = $('prefix').value.toUpperCase();
+  const s = $('exp');
+  const d = parseInt(s.value);
+  const tag = s.options[s.selectedIndex].dataset.tag;
+  const exp = d === 0 ? null : Date.now() + d * 86400000;
 
-  const key=`${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
-  keys.unshift({key,tag,exp});
-  localStorage.setItem(storeKey,JSON.stringify(keys));
+  const key = `${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
+  keys.unshift({ key, tag, exp });
+  localStorage.setItem(storeKey, JSON.stringify(keys));
   render();
 }
 
-<script>
 async function validate() {
   const k = $('check').value.trim();
   const f = keys.find(x => x.key === k);
@@ -225,31 +50,30 @@ async function validate() {
   $('vmsg').innerHTML = `<span class="ok">Key válida (${f.tag})</span>`;
 
   try {
-    // Chama API do GitHub Actions
-    const repo = "maskaradevxan/keygenerator"; // ajuste se mudar
-    const runId = "add-key.yml"; // nome do workflow
+    // parâmetros
+    const repo = "maskaradevxan/keygenerator";
+    const workflowFile = "add-key.yml"; // nome do workflow
+    const branch = "main"; // ou o branch que você usa
+    const githubToken = "SEU_TOKEN_AQUI"; // precisa de um token válido
 
     const response = await fetch(
-      `https://api.github.com/repos/${repo}/actions/workflows/${runId}/dispatches`,
+      `https://api.github.com/repos/${repo}/actions/workflows/${workflowFile}/dispatches`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/vnd.github.v3+json",
-          // Se você tiver um token pessoal que possa expor com segurança, ponha aqui,
-          // mas se NÃO PÔR, o GitHub pode recusar.
-          // Exemplo seguro: não expor token em frontend público.
-          "Authorization": "Bearer SEU_TOKEN_AQUI"
+          "Authorization": "Bearer " + githubToken
         },
         body: JSON.stringify({
-          ref: "main",
+          ref: branch,
           inputs: { key: k }
         })
       }
     );
 
     if (response.ok) {
-      alert("Key enviada ao workflow do GitHub!");
+      alert("Key enviada ao GitHub Actions!");
     } else {
       const err = await response.json();
       alert("Erro ao chamar workflow: " + JSON.stringify(err));
@@ -259,6 +83,3 @@ async function validate() {
   }
 }
 </script>
-
-</body>
-</html>
