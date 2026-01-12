@@ -1,161 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bypass CLN • Gerador de Keys</title>
-  <style>
-    :root{
-      --bg:#0b0203;
-      --panel:#140405;
-      --red:#c1121f;
-      --red-2:#8a0e14;
-      --txt:#f5f5f5;
-      --muted:#c9a1a4;
-      --ok:#3ddc97;
-    }
-    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{
-      margin:0;min-height:100vh;
-      background:radial-gradient(1200px 600px at 10% -10%, #2a070a, transparent),
-                 linear-gradient(180deg,#070102,#120304 60%,#070102);
-      color:var(--txt);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .wrap{width:100%;max-width:980px;padding:24px}
-    .card{
-      background:linear-gradient(180deg,#180405,#0f0203);
-      border:1px solid #2a070a;
-      border-radius:14px;
-      box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.02);
-      overflow:hidden;
-    }
-    header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:18px 22px;border-bottom:1px solid #2a070a;
-      background:linear-gradient(180deg,#1c0507,#120304);
-    }
-    header .brand{display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 14px var(--red)}
-    h1{font-size:18px;margin:0;letter-spacing:.4px}
-    .badge{font-size:12px;color:#ffd1d4;background:#2a070a;border:1px solid #3b0a0e;padding:6px 10px;border-radius:999px}
-
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:0}
-    aside{border-right:1px solid #2a070a;background:#0c0203}
-    main{padding:22px}
-
-    .pane{padding:22px}
-    .title{font-size:14px;color:#ffd1d4;margin-bottom:8px;letter-spacing:.4px}
-    .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
-
-    .field{margin-bottom:12px}
-    .field label{display:block;font-size:12px;color:#ffd1d4;margin-bottom:6px}
-    .field input, .field select{
-      width:100%;padding:10px 12px;border-radius:10px;
-      border:1px solid #3b0a0e;background:#0a0203;color:var(--txt)
-    }
-    .field input:focus,.field select:focus{outline:none;border-color:var(--red)}
-
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:10px 14px;border-radius:12px;border:1px solid #3b0a0e;
-      background:linear-gradient(180deg,var(--red),var(--red-2));
-      color:#fff;cursor:pointer
-    }
-    .btn.secondary{background:#120304;color:#ffd1d4}
-    .btn.ghost{background:transparent}
-    .btn:active{transform:translateY(1px)}
-
-    .list{display:grid;gap:10px}
-    .item{
-      background:#0a0203;border:1px solid #2a070a;border-radius:12px;padding:12px
-    }
-    .item .k{font-family:ui-monospace,Consolas,monospace;font-size:14px}
-    .item small{color:var(--muted)}
-
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .spacer{flex:1}
-
-    .hidden{display:none}
-    .ok{color:var(--ok)}
-    .warn{color:#ffd1d4}
-
-    footer{padding:14px 22px;border-top:1px solid #2a070a;color:var(--muted);font-size:12px;display:flex;justify-content:space-between}
-
-    @media (max-width:900px){
-      .grid{grid-template-columns:1fr}
-      aside{border-right:none;border-bottom:1px solid #2a070a}
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card">
-      <header>
-        <div class="brand">
-          <span class="dot"></span>
-          <h1>Sensi CLN</h1>
-        </div>
-        <span class="badge"></span>
-      </header>
-
-      <!-- LOGIN -->
-      <section id="login" class="pane">
-        <div class="title">Acesso restrito</div>
-        <div class="desc">Entre com login e senha de administrador.</div>
-        <div class="field"><label>Usuário</label><input id="u" placeholder="Usúario" /></div>
-        <div class="field"><label>Senha</label><input id="p" type="Senha" placeholder="••••••" /></div>
-        <button class="btn" onclick="login()">Entrar</button>
-        <div id="lmsg" class="desc"></div>
-      </section>
-
-      <!-- PAINEL -->
-      <section id="panel" class="hidden">
-        <div class="grid">
-          <aside>
-            <div class="pane">
-              <div class="title">Gerar Key</div>
-              <div class="desc">Modelo: <b>CLN-XXXXX-XXXXX-XXXXX</b></div>
-              <div class="field"><label>Prefixo</label><input id="prefix" value="CLN" /></div>
-              <div class="field"><label>Plano</label>
-                <select id="exp">
-                  <option value="7" data-tag="SEMANAL">Semanal</option>
-                  <option value="30" data-tag="MENSAL">Mensal</option>
-                  <option value="90" data-tag=""></option>
-                  <option value="365" data-tag=""></option>
-                  <option value="0" data-tag="LIFETIME">Lifetime</option>
-                </select>
-              </div>
-              </div>
-              <button class="btn" onclick="generate()">Gerar</button>
-            </div>
-          </aside>
-
-          <main>
-            <div class="title">Validação</div>
-            <div class="desc">Cole a key para validar (client-side).</div>
-            <div class="row">
-              <input id="check" placeholder="CLN-XXXXX-XXXXX-XXXXX" />
-              <button class="btn secondary" onclick="validate()">Validar</button>
-            </div>
-            <div id="vmsg" class="desc"></div>
-
-            <hr style="border:0;border-top:1px solid #2a070a;margin:18px 0">
-
-            <div class="title">Keys Geradas</div>
-            <div id="list" class="list"></div>
-          </main>
-        </div>
-        <footer>
-          <span>Modo privado ativo</span>
-          <span id="now"></span>
-        </footer>
-      </section>
-    </div>
-  </div>
-
 <script>
-  // ===== CONFIG ADMIN (DEMO) =====
+  // ===== CONFIG ADMIN =====
   const ADMIN_USER = 'celes';
   const ADMIN_PASS = 'clean';
 
@@ -165,7 +9,7 @@
   const $ = (id)=>document.getElementById(id);
 
   function login(){
-    if($('u').value===ADMIN_USER && $('p').value===ADMIN_PASS){
+    if($('u').value === ADMIN_USER && $('p').value === ADMIN_PASS){
       $('login').classList.add('hidden');
       $('panel').classList.remove('hidden');
       render();
@@ -176,7 +20,8 @@
 
   function rnd(){
     const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let s=''; for(let i=0;i<5;i++) s+=a[Math.floor(Math.random()*a.length)];
+    let s='';
+    for(let i=0;i<5;i++) s+=a[Math.floor(Math.random()*a.length)];
     return s;
   }
 
@@ -184,9 +29,11 @@
     const p = ($('prefix').value || 'CLN').toUpperCase();
     const sel = $('exp');
     const expDays = parseInt(sel.value,10);
-    const tag = sel.options[sel.selectedIndex].dataset.tag || 'SEMANAL';
-    const expAt = expDays===0 ? null : (Date.now() + expDays*24*60*60*1000);
+    const tag = sel.options[sel.selectedIndex].dataset.tag;
+
+    const expAt = expDays === 0 ? null : (Date.now() + expDays*24*60*60*1000);
     const key = `${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
+
     keys.unshift({ key, expAt, tag });
     localStorage.setItem(storeKey, JSON.stringify(keys));
     render();
@@ -194,27 +41,41 @@
 
   function validate(){
     const k = $('check').value.trim();
-    const found = keys.find(x=>x.key===k);
-    if(!found){ $('vmsg').innerHTML = '<span class="warn">Key não encontrada.</span>'; return; }
-    if(found.expAt!==null && Date.now()>found.expAt){ $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>'; return; }
-    const plan = found.tag ? ` (${found.tag})` : '';
-    $('vmsg').innerHTML = `<span class="ok">Key válida${plan}.</span>`;
-  }
-    if(found.expAt && Date.now()>found.expAt){ $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>'; return; }
-    $('vmsg').innerHTML = '<span class="ok">Key válida.</span>';
+    const found = keys.find(x=>x.key === k);
+
+    if(!found){
+      $('vmsg').innerHTML = '<span class="warn">Key não encontrada.</span>';
+      return;
+    }
+
+    if(found.expAt !== null && Date.now() > found.expAt){
+      $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>';
+      return;
+    }
+
+    $('vmsg').innerHTML = `<span class="ok">Key válida (${found.tag}).</span>`;
   }
 
   function render(){
-    const list = $('list'); list.innerHTML='';
+    const list = $('list');
+    list.innerHTML = '';
+
     keys.forEach(x=>{
-      const d = document.createElement('div'); d.className='item';
+      const d = document.createElement('div');
+      d.className='item';
+
       let expTxt = 'Lifetime';
-      if(x.expAt!==null){ expTxt = new Date(x.expAt).toLocaleDateString('pt-BR'); }
-      d.innerHTML = `<div class="k">${x.key}</div><small>Plano: ${x.tag || 'SEMANAL'} • Expira em: ${expTxt}</small>`;
+      if(x.expAt !== null){
+        expTxt = new Date(x.expAt).toLocaleDateString('pt-BR');
+      }
+
+      d.innerHTML = `
+        <div class="k">${x.key}</div>
+        <small>Plano: ${x.tag} • Expira em: ${expTxt}</small>
+      `;
       list.appendChild(d);
     });
+
     $('now').textContent = new Date().toLocaleString('pt-BR');
   }
 </script>
-</body>
-</html>
