@@ -7,74 +7,76 @@
 
   <style>
     :root{
-      --bg:#0b0203;
-      --panel:#140405;
       --red:#c1121f;
       --red-2:#8a0e14;
       --txt:#f5f5f5;
       --muted:#c9a1a4;
       --ok:#3ddc97;
     }
-    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
     body{
       margin:0;min-height:100vh;
-      background:radial-gradient(1200px 600px at 10% -10%, #2a070a, transparent),
-                 linear-gradient(180deg,#070102,#120304 60%,#070102);
+      background:linear-gradient(180deg,#070102,#120304 60%,#070102);
       color:var(--txt);
       display:flex;align-items:center;justify-content:center;
     }
     .wrap{width:100%;max-width:980px;padding:24px}
     .card{
-      background:linear-gradient(180deg,#180405,#0f0203);
+      background:#0f0203;
       border:1px solid #2a070a;
       border-radius:14px;
-      box-shadow:0 30px 80px rgba(0,0,0,.6);
       overflow:hidden;
     }
     header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:18px 22px;border-bottom:1px solid #2a070a;
-      background:linear-gradient(180deg,#1c0507,#120304);
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 20px;border-bottom:1px solid #2a070a;
     }
-    header .brand{display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 14px var(--red)}
-    h1{font-size:18px;margin:0;letter-spacing:.4px}
-    .badge{font-size:12px;color:#ffd1d4;background:#2a070a;border:1px solid #3b0a0e;padding:6px 10px;border-radius:999px}
+    .brand{display:flex;gap:10px;align-items:center}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
+    h1{font-size:18px;margin:0}
 
     .grid{display:grid;grid-template-columns:320px 1fr}
     aside{border-right:1px solid #2a070a;background:#0c0203}
     main{padding:22px}
     .pane{padding:22px}
+
     .title{font-size:14px;color:#ffd1d4;margin-bottom:8px}
     .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
 
     .field{margin-bottom:12px}
-    .field label{display:block;font-size:12px;color:#ffd1d4;margin-bottom:6px}
+    .field label{font-size:12px;color:#ffd1d4}
     .field input,.field select{
-      width:100%;padding:10px 12px;border-radius:10px;
-      border:1px solid #3b0a0e;background:#0a0203;color:var(--txt)
+      width:100%;padding:10px;border-radius:10px;
+      border:1px solid #3b0a0e;background:#0a0203;color:#fff
     }
 
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:10px 14px;border-radius:12px;border:1px solid #3b0a0e;
+      width:100%;
+      padding:10px;border-radius:12px;
+      border:1px solid #3b0a0e;
       background:linear-gradient(180deg,var(--red),var(--red-2));
-      color:#fff;cursor:pointer
+      color:#fff;cursor:pointer;margin-bottom:8px
     }
-    .btn.secondary{background:#120304;color:#ffd1d4}
+    .btn.secondary{
+      background:#120304;color:#ffd1d4
+    }
+    .btn.danger{
+      background:#2a070a;
+      border-color:#5c0f15;
+      color:#ffd1d4;
+    }
 
     .list{display:grid;gap:10px}
     .item{background:#0a0203;border:1px solid #2a070a;border-radius:12px;padding:12px}
-    .item .k{font-family:ui-monospace,Consolas,monospace;font-size:14px}
+    .k{font-family:Consolas,monospace}
 
     .hidden{display:none}
     .ok{color:var(--ok)}
     .warn{color:#ffd1d4}
 
     footer{
-      padding:14px 22px;border-top:1px solid #2a070a;
-      color:var(--muted);font-size:12px;
-      display:flex;justify-content:space-between
+      padding:12px 20px;border-top:1px solid #2a070a;
+      display:flex;justify-content:space-between;font-size:12px;color:var(--muted)
     }
   </style>
 </head>
@@ -88,22 +90,20 @@
     <span class="dot"></span>
     <h1>Sensi CLN</h1>
   </div>
-  <span class="badge">Key Generator</span>
 </header>
 
 <!-- LOGIN -->
 <section id="login" class="pane">
   <div class="title">Acesso restrito</div>
-  <div class="desc">Entre com login e senha de administrador.</div>
+  <div class="desc">Login de administrador</div>
 
   <div class="field">
     <label>Usuário</label>
-    <input id="u" placeholder="Usuário">
+    <input id="u">
   </div>
-
   <div class="field">
     <label>Senha</label>
-    <input id="p" type="password" placeholder="••••••">
+    <input id="p" type="password">
   </div>
 
   <button class="btn" onclick="login()">Entrar</button>
@@ -116,8 +116,8 @@
 
 <aside>
   <div class="pane">
-    <div class="title">Gerar Key</div>
-    <div class="desc">Modelo: <b>CLN-PLANO-XXXXX-XXXXX-XXXXX</b></div>
+    <div class="title">Key Generator</div>
+    <div class="desc">CLN-PLANO-XXXXX-XXXXX-XXXXX</div>
 
     <div class="field">
       <label>Prefixo</label>
@@ -133,13 +133,21 @@
       </select>
     </div>
 
-    <button class="btn" onclick="generate()">Gerar</button>
+    <button class="btn" onclick="generate()">Gerar Key</button>
+
+    <a href="/keys.txt" target="_blank">
+      <button class="btn secondary">Abrir keys.txt</button>
+    </a>
+
+    <!-- 🔥 EXCLUIR TODAS AS KEYS -->
+    <button class="btn danger" onclick="clearAllKeys()">
+      Excluir todas as keys
+    </button>
   </div>
 </aside>
 
 <main>
   <div class="title">Validação</div>
-  <div class="desc">Cole a key para validar.</div>
 
   <input id="check" placeholder="CLN-SEMANAL-XXXXX-XXXXX-XXXXX">
   <br><br>
@@ -165,77 +173,64 @@
 </div>
 
 <script>
-const ADMIN_USER = 'celes';
-const ADMIN_PASS = 'clean';
+const ADMIN_USER='celes';
+const ADMIN_PASS='clean';
 
-const storeKey = 'cln_keys_v1';
-const keys = JSON.parse(localStorage.getItem(storeKey) || '[]');
-const $ = id => document.getElementById(id);
+const storeKey='cln_keys_v1';
+let keys=JSON.parse(localStorage.getItem(storeKey)||'[]');
+const $=id=>document.getElementById(id);
 
 function login(){
-  if($('u').value === ADMIN_USER && $('p').value === ADMIN_PASS){
+  if($('u').value===ADMIN_USER && $('p').value===ADMIN_PASS){
     $('login').classList.add('hidden');
     $('panel').classList.remove('hidden');
     render();
-  }else{
-    $('lmsg').textContent = 'Credenciais inválidas.';
-  }
+  }else $('lmsg').textContent='Credenciais inválidas';
 }
 
 function rnd(){
   const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let s='';
-  for(let i=0;i<5;i++) s+=a[Math.floor(Math.random()*a.length)];
-  return s;
+  return Array.from({length:5},()=>a[Math.floor(Math.random()*a.length)]).join('');
 }
 
 function generate(){
-  const p = ($('prefix').value || 'CLN').toUpperCase();
-  const sel = $('exp');
-  const expDays = parseInt(sel.value);
-  const tag = sel.options[sel.selectedIndex].dataset.tag;
+  const p=$('prefix').value.toUpperCase();
+  const s=$('exp');
+  const d=parseInt(s.value);
+  const tag=s.options[s.selectedIndex].dataset.tag;
+  const exp=d===0?null:Date.now()+d*86400000;
 
-  const expAt = expDays === 0 ? null : Date.now() + expDays*86400000;
-  const key = `${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
-
-  keys.unshift({ key, expAt, tag });
-  localStorage.setItem(storeKey, JSON.stringify(keys));
+  const key=`${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
+  keys.unshift({key,tag,exp});
+  localStorage.setItem(storeKey,JSON.stringify(keys));
   render();
 }
 
 function validate(){
-  const k = $('check').value.trim();
-  const found = keys.find(x => x.key === k);
+  const k=$('check').value.trim();
+  const f=keys.find(x=>x.key===k);
+  if(!f)return $('vmsg').innerHTML='<span class="warn">Key não encontrada</span>';
+  if(f.exp && Date.now()>f.exp)
+    return $('vmsg').innerHTML='<span class="warn">Key expirada</span>';
+  $('vmsg').innerHTML=`<span class="ok">Key válida (${f.tag})</span>`;
+}
 
-  if(!found){
-    $('vmsg').innerHTML = '<span class="warn">Key não encontrada.</span>';
-    return;
-  }
-  if(found.expAt !== null && Date.now() > found.expAt){
-    $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>';
-    return;
-  }
-  $('vmsg').innerHTML = `<span class="ok">Key válida (${found.tag}).</span>`;
+function clearAllKeys(){
+  if(!confirm('Tem certeza que deseja excluir TODAS as keys?')) return;
+  keys=[];
+  localStorage.removeItem(storeKey);
+  $('list').innerHTML='';
+  $('vmsg').innerHTML='<span class="warn">Todas as keys foram removidas.</span>';
 }
 
 function render(){
-  const list = $('list');
-  list.innerHTML = '';
-
+  const l=$('list'); l.innerHTML='';
   keys.forEach(x=>{
-    const d = document.createElement('div');
-    d.className='item';
-
-    const exp = x.expAt ? new Date(x.expAt).toLocaleDateString('pt-BR') : 'Lifetime';
-
-    d.innerHTML = `
-      <div class="k">${x.key}</div>
-      <small>Plano: ${x.tag} • Expira em: ${exp}</small>
-    `;
-    list.appendChild(d);
+    const e=x.exp?new Date(x.exp).toLocaleDateString('pt-BR'):'Lifetime';
+    l.innerHTML+=`<div class="item"><div class="k">${x.key}</div>
+    <small>${x.tag} • Expira em: ${e}</small></div>`;
   });
-
-  $('now').textContent = new Date().toLocaleString('pt-BR');
+  $('now').textContent=new Date().toLocaleString('pt-BR');
 }
 </script>
 
