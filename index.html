@@ -1,222 +1,227 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bypass CLN • Gerador de Keys</title>
+<meta charset="UTF-8">
+<title>Sensi CLN — Key Generator</title>
 
-  <style>
-    :root{
-      --red:#c1121f;
-      --red-2:#8a0e14;
-      --txt:#f5f5f5;
-      --muted:#c9a1a4;
-      --ok:#3ddc97;
-    }
-    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-    body{
-      margin:0;min-height:100vh;
-      background:linear-gradient(180deg,#070102,#120304 60%,#070102);
-      color:var(--txt);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .wrap{width:100%;max-width:980px;padding:24px}
-    .card{
-      background:#0f0203;
-      border:1px solid #2a070a;
-      border-radius:14px;
-      overflow:hidden;
-    }
-    header{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 20px;border-bottom:1px solid #2a070a;
-    }
-    .brand{display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
-    h1{font-size:18px;margin:0}
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    .grid{display:grid;grid-template-columns:320px 1fr}
-    aside{border-right:1px solid #2a070a;background:#0c0203}
-    main{padding:22px}
-    .pane{padding:22px}
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1a0000, #000);
+  color: #fff;
+}
 
-    .title{font-size:14px;color:#ffd1d4;margin-bottom:8px}
-    .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
+.panel {
+  max-width: 1200px;
+  margin: 40px auto;
+  background: rgba(10,0,0,0.85);
+  border-radius: 14px;
+  box-shadow: 0 0 40px rgba(255,0,0,0.25);
+  padding: 25px;
+}
 
-    .field{margin-bottom:12px}
-    .field label{font-size:12px;color:#ffd1d4}
-    .field input,.field select{
-      width:100%;padding:10px;border-radius:10px;
-      border:1px solid #3b0a0e;background:#0a0203;color:#fff
-    }
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
 
-    .btn{
-      width:100%;
-      padding:10px;border-radius:12px;
-      border:1px solid #3b0a0e;
-      background:linear-gradient(180deg,var(--red),var(--red-2));
-      color:#fff;cursor:pointer;margin-bottom:8px
-    }
-    .btn.secondary{
-      background:#120304;color:#ffd1d4
-    }
+.header::before {
+  content: "●";
+  color: red;
+}
 
-    .list{display:grid;gap:10px}
-    .item{background:#0a0203;border:1px solid #2a070a;border-radius:12px;padding:12px}
-    .k{font-family:Consolas,monospace}
+.content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 25px;
+}
 
-    .hidden{display:none}
-    .ok{color:var(--ok)}
-    .warn{color:#ffd1d4}
+.section {
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  padding: 20px;
+}
 
-    footer{
-      padding:12px 20px;border-top:1px solid #2a070a;
-      display:flex;justify-content:space-between;font-size:12px;color:var(--muted)
-    }
-  </style>
+.section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #ff3c3c;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #120000;
+  border: 1px solid #400000;
+  border-radius: 8px;
+  color: #fff;
+}
+
+button {
+  cursor: pointer;
+  background: linear-gradient(135deg, #8b0000, #c10000);
+  transition: 0.2s;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #a00000, #ff1a1a);
+  transform: scale(1.02);
+}
+
+.key-box {
+  border: 1px solid #400000;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: rgba(0,0,0,0.7);
+}
+
+.key-box small {
+  color: #ff7777;
+}
+
+.clear-keys-btn {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 13px;
+  float: right;
+  margin-bottom: 10px;
+  box-shadow: 0 0 10px rgba(255,0,0,0.3);
+}
+
+.footer {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #aaa;
+  display: flex;
+  justify-content: space-between;
+}
+</style>
 </head>
 
 <body>
-<div class="wrap">
-<div class="card">
 
-<header>
-  <div class="brand">
-    <span class="dot"></span>
-    <h1>Sensi CLN</h1>
-  </div>
-</header>
+<div class="panel">
+  <div class="header">Sensi CLN</div>
 
-<!-- LOGIN -->
-<section id="login" class="pane">
-  <div class="title">Acesso restrito</div>
-  <div class="desc">Login de administrador</div>
+  <div class="content">
 
-  <div class="field">
-    <label>Usuário</label>
-    <input id="u">
-  </div>
-  <div class="field">
-    <label>Senha</label>
-    <input id="p" type="password">
-  </div>
+    <!-- GERADOR -->
+    <div class="section">
+      <h3>Key Generator</h3>
 
-  <button class="btn" onclick="login()">Entrar</button>
-  <div id="lmsg" class="desc"></div>
-</section>
-
-<!-- PAINEL -->
-<section id="panel" class="hidden">
-<div class="grid">
-
-<aside>
-  <div class="pane">
-    <div class="title">Key Generator</div>
-    <div class="desc">CLN-PLANO-XXXXX-XXXXX-XXXXX</div>
-
-    <div class="field">
       <label>Prefixo</label>
-      <input id="prefix" value="CLN">
-    </div>
+      <input id="prefix" value="CLN" disabled>
 
-    <div class="field">
       <label>Plano</label>
-      <select id="exp">
-        <option value="7" data-tag="SEMANAL">Semanal</option>
-        <option value="30" data-tag="MENSAL">Mensal</option>
-        <option value="0" data-tag="LIFETIME">Lifetime</option>
+      <select id="plan">
+        <option value="SEMANAL">Semanal</option>
+        <option value="MENSAL">Mensal</option>
+        <option value="LIFETIME">Lifetime</option>
       </select>
+
+      <button onclick="generateKey()">Gerar Key</button>
     </div>
 
-    <button class="btn" onclick="generate()">Gerar Key</button>
+    <!-- VALIDAÇÃO / LISTA -->
+    <div class="section">
+      <h3>
+        Keys Geradas
+        <button class="clear-keys-btn" onclick="clearKeys()">Excluir todas</button>
+      </h3>
 
-    <!-- 🔴 BOTÃO KEYS.TXT -->
-  <a href="https://github.com/maskaradevxan/keyauth/edit/main/keys.txt"
-   target="_blank"
-   rel="noopener noreferrer">
-  <button class="btn secondary">Editar keys.txt</button>
-</a>
+      <div id="keysList"></div>
+    </div>
+
   </div>
-</aside>
 
-<main>
-  <div class="title">Validação</div>
-
-  <input id="check" placeholder="CLN-SEMANAL-XXXXX-XXXXX-XXXXX">
-  <br><br>
-  <button class="btn secondary" onclick="validate()">Validar</button>
-
-  <div id="vmsg" class="desc"></div>
-
-  <hr style="border:0;border-top:1px solid #2a070a;margin:18px 0">
-
-  <div class="title">Keys Geradas</div>
-  <div id="list" class="list"></div>
-</main>
-
-</div>
-
-<footer>
-  <span>Modo privado ativo</span>
-  <span id="now"></span>
-</footer>
-</section>
-
-</div>
+  <div class="footer">
+    <span>Modo privado ativo</span>
+    <span id="date"></span>
+  </div>
 </div>
 
 <script>
-const ADMIN_USER='celes';
-const ADMIN_PASS='clean';
+const keysList = document.getElementById("keysList");
 
-const storeKey='cln_keys_v1';
-const keys=JSON.parse(localStorage.getItem(storeKey)||'[]');
-const $=id=>document.getElementById(id);
-
-function login(){
-  if($('u').value===ADMIN_USER && $('p').value===ADMIN_PASS){
-    $('login').classList.add('hidden');
-    $('panel').classList.remove('hidden');
-    render();
-  }else $('lmsg').textContent='Credenciais inválidas';
+function randomBlock(size) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let r = "";
+  for (let i = 0; i < size; i++) {
+    r += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return r;
 }
 
-function rnd(){
-  const a='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  return Array.from({length:5},()=>a[Math.floor(Math.random()*a.length)]).join('');
+function getExpiration(plan) {
+  if (plan === "LIFETIME") return "Lifetime";
+
+  const now = new Date();
+  if (plan === "SEMANAL") now.setDate(now.getDate() + 7);
+  if (plan === "MENSAL") now.setMonth(now.getMonth() + 1);
+
+  return now.toLocaleDateString("pt-BR");
 }
 
-function generate(){
-  const p=$('prefix').value.toUpperCase();
-  const s=$('exp');
-  const d=parseInt(s.value);
-  const tag=s.options[s.selectedIndex].dataset.tag;
-  const exp=d===0?null:Date.now()+d*86400000;
+function generateKey() {
+  const prefix = "CLN";
+  const plan = document.getElementById("plan").value;
 
-  const key=`${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
-  keys.unshift({key,tag,exp});
-  localStorage.setItem(storeKey,JSON.stringify(keys));
-  render();
+  const key =
+    `${prefix}-${plan}-` +
+    `${randomBlock(4)}-${randomBlock(4)}-${randomBlock(4)}`;
+
+  const exp = getExpiration(plan);
+
+  const data = {
+    key,
+    plan,
+    exp
+  };
+
+  const saved = JSON.parse(localStorage.getItem("generatedKeys") || "[]");
+  saved.unshift(data);
+  localStorage.setItem("generatedKeys", JSON.stringify(saved));
+
+  renderKeys();
 }
 
-function validate(){
-  const k=$('check').value.trim();
-  const f=keys.find(x=>x.key===k);
-  if(!f)return $('vmsg').innerHTML='<span class="warn">Key não encontrada</span>';
-  if(f.exp && Date.now()>f.exp)
-    return $('vmsg').innerHTML='<span class="warn">Key expirada</span>';
-  $('vmsg').innerHTML=`<span class="ok">Key válida (${f.tag})</span>`;
-}
+function renderKeys() {
+  keysList.innerHTML = "";
+  const saved = JSON.parse(localStorage.getItem("generatedKeys") || "[]");
 
-function render(){
-  const l=$('list'); l.innerHTML='';
-  keys.forEach(x=>{
-    const e=x.exp?new Date(x.exp).toLocaleDateString('pt-BR'):'Lifetime';
-    l.innerHTML+=`<div class="item"><div class="k">${x.key}</div>
-    <small>${x.tag} • Expira em: ${e}</small></div>`;
+  saved.forEach(k => {
+    const div = document.createElement("div");
+    div.className = "key-box";
+    div.innerHTML = `
+      <strong>${k.key}</strong><br>
+      <small>${k.plan} • Expira em: ${k.exp}</small>
+    `;
+    keysList.appendChild(div);
   });
-  $('now').textContent=new Date().toLocaleString('pt-BR');
 }
+
+function clearKeys() {
+  if (!confirm("Tem certeza que deseja excluir TODAS as keys?")) return;
+  localStorage.removeItem("generatedKeys");
+  renderKeys();
+  alert("Todas as keys foram excluídas.");
+}
+
+document.getElementById("date").innerText =
+  new Date().toLocaleString("pt-BR");
+
+renderKeys();
 </script>
 
 </body>
