@@ -117,13 +117,15 @@
               <div class="title">Gerar Key</div>
               <div class="desc">Modelo: <b>CLN-XXXXX-XXXXX-XXXXX</b></div>
               <div class="field"><label>Prefixo</label><input id="prefix" value="CLN" /></div>
-              <div class="field"><label>Expiração</label>
+              <div class="field"><label>Plano</label>
                 <select id="exp">
-                  <option value="1">1 dia</option>
-                  <option value="7">7 dias</option>
-                  <option value="30">30 dias</option>
-                  <option value="life">Lifetime</option>
+                  <option value="7" data-tag="SEMANAL">Semanal</option>
+                  <option value="30" data-tag="MENSAL">Mensal</option>
+                  <option value="90" data-tag=""></option>
+                  <option value="365" data-tag=""></option>
+                  <option value="0" data-tag="LIFETIME">Lifetime</option>
                 </select>
+              </div>
               </div>
               <button class="btn" onclick="generate()">Gerar</button>
             </div>
@@ -179,11 +181,13 @@
   }
 
   function generate(){
-    const p = $('prefix').value.toUpperCase() || 'CLN';
-    const expVal = $('exp').value;
-    const expAt = expVal === 'life' ? null : (Date.now() + parseInt(expVal,10)*24*60*60*1000);
-    const key = `${p}-${rnd()}-${rnd()}-${rnd()}`;
-    keys.unshift({ key, expAt });
+    const p = ($('prefix').value || 'CLN').toUpperCase();
+    const sel = $('exp');
+    const expDays = parseInt(sel.value,10);
+    const tag = sel.options[sel.selectedIndex].dataset.tag || 'SEMANAL';
+    const expAt = expDays===0 ? null : (Date.now() + expDays*24*60*60*1000);
+    const key = `${p}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
+    keys.unshift({ key, expAt, tag });
     localStorage.setItem(storeKey, JSON.stringify(keys));
     render();
   }
@@ -192,6 +196,10 @@
     const k = $('check').value.trim();
     const found = keys.find(x=>x.key===k);
     if(!found){ $('vmsg').innerHTML = '<span class="warn">Key não encontrada.</span>'; return; }
+    if(found.expAt!==null && Date.now()>found.expAt){ $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>'; return; }
+    const plan = found.tag ? ` (${found.tag})` : '';
+    $('vmsg').innerHTML = `<span class="ok">Key válida${plan}.</span>`;
+  }
     if(found.expAt && Date.now()>found.expAt){ $('vmsg').innerHTML = '<span class="warn">Key expirada.</span>'; return; }
     $('vmsg').innerHTML = '<span class="ok">Key válida.</span>';
   }
@@ -200,8 +208,9 @@
     const list = $('list'); list.innerHTML='';
     keys.forEach(x=>{
       const d = document.createElement('div'); d.className='item';
-      const exp = x.expAt ? new Date(x.expAt).toLocaleDateString('pt-BR') : 'Lifetime';
-      d.innerHTML = `<div class="k">${x.key}</div><small>Expira em: ${exp}</small>`;
+      let expTxt = 'Lifetime';
+      if(x.expAt!==null){ expTxt = new Date(x.expAt).toLocaleDateString('pt-BR'); }
+      d.innerHTML = `<div class="k">${x.key}</div><small>Plano: ${x.tag || 'SEMANAL'} • Expira em: ${expTxt}</small>`;
       list.appendChild(d);
     });
     $('now').textContent = new Date().toLocaleString('pt-BR');
