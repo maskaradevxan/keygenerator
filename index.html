@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- saved from url=(0036)https://keygenaratorcln.netlify.app/ -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bypass CLN • Gerador de Keys</title>
 
   <style>
@@ -46,7 +46,7 @@
 </header>
 
 <!-- LOGIN -->
-<section id="login" class="pane">
+<section id="login" class="pane hidden">
   <div class="title">Acesso restrito</div>
   <div class="desc">Login de administrador</div>
 
@@ -58,7 +58,7 @@
 </section>
 
 <!-- PAINEL -->
-<section id="panel" class="hidden">
+<section id="panel" class="">
 <div class="grid">
 
 <aside>
@@ -82,8 +82,7 @@
 
     <button class="btn" onclick="generate()">Gerar Key</button>
 
-    <a href="https://github.com/maskaradevxan/keyauth/edit/main/keys.txt"
-       target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/maskaradevxan/keyauth/edit/main/keys.txt" target="_blank" rel="noopener noreferrer">
       <button class="btn secondary">Editar keys.txt</button>
     </a>
 
@@ -100,7 +99,7 @@
   <br><br>
   <button class="btn secondary" onclick="validate()">Validar</button>
 
-  <div id="vmsg" class="desc"></div>
+  <div id="vmsg" class="desc"><span class="warn">Key não encontrada</span></div>
 
   <hr style="border:0;border-top:1px solid #2a070a;margin:18px 0">
   <div class="title">Keys Geradas</div>
@@ -111,7 +110,7 @@
 
 <footer>
   <span>Modo privado ativo</span>
-  <span id="now"></span>
+  <span id="now">13/01/2026, 12:38:42</span>
 </footer>
 </section>
 
@@ -163,67 +162,48 @@ function clearAllKeys() {
   $('vmsg').innerHTML = '<span class="warn">Todas as keys foram removidas.</span>';
 }
 
+<script>
+const KEYS_TXT_URL = "https://raw.githubusercontent.com/maskaradevxan/keyauth/main/keys.txt";
+
 async function validate() {
   const k = $('check').value.trim();
-  const found = keys.find(x => x.key === k);
 
-  if (!found) {
-    $('vmsg').innerHTML = '<span class="warn">Key não encontrada</span>';
-    return;
-  }
-  if (found.exp && Date.now() > found.exp) {
-    $('vmsg').innerHTML = '<span class="warn">Key expirada</span>';
+  if (!k) {
+    $('vmsg').innerHTML = '<span class="warn">Digite uma key</span>';
     return;
   }
 
-  $('vmsg').innerHTML = `<span class="ok">Key válida (${found.tag})</span>`;
-
-  // ------ API GITHUB (opcional) ------
   try {
-    const repo = "maskaradevxan/keygenerator";
-    const workflowFile = "add-key.yml";
-    const branch = "main";
-    const githubToken = "SEU_TOKEN_AQUI";
+    const res = await fetch(KEYS_TXT_URL, { cache: "no-store" });
 
-    const response = await fetch(
-      `https://api.github.com/repos/${repo}/actions/workflows/${workflowFile}/dispatches`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/vnd.github.v3+json",
-          "Authorization": "Bearer " + githubToken
-        },
-        body: JSON.stringify({
-          ref: branch,
-          inputs: { key: k }
-        })
-      }
-    );
-
-    if (response.ok) {
-      console.log("Dispatch OK!");
-    } else {
-      console.error("Dispatch erro:", await response.json());
+    if (!res.ok) {
+      $('vmsg').innerHTML = '<span class="warn">Erro ao acessar keys.txt</span>';
+      return;
     }
-  } catch (err) {
-    console.error("Erro dispatch:", err);
-  }
-}
 
-function render() {
-  const list = $('list');
-  list.innerHTML = '';
-  keys.forEach(item => {
-    const expStr = item.exp ? new Date(item.exp).toLocaleDateString('pt-BR') : 'Lifetime';
-    list.innerHTML += `<div class="item"><div class="k">${item.key}</div>
-      <small>${item.tag} • Expira em: ${expStr}</small></div>`;
-  });
-  $('now').textContent = new Date().toLocaleString('pt-BR');
+    const text = await res.text();
+
+    // cada key em uma linha
+    const keysOnline = text
+      .split(/\r?\n/)
+      .map(x => x.trim())
+      .filter(x => x !== "");
+
+    if (keysOnline.includes(k)) {
+      $('vmsg').innerHTML = '<span class="ok">Key válida (online)</span>';
+    } else {
+      $('vmsg').innerHTML = '<span class="warn">Key não encontrada</span>';
+    }
+
+  } catch (err) {
+    $('vmsg').innerHTML = '<span class="warn">Falha na verificação</span>';
+    console.error(err);
+  }
 }
 
 render(); // render on load
 </script>
 
-</body>
-</html>
+
+
+</body></html>
