@@ -154,25 +154,32 @@ footer{
 <script>
 const ADMIN_USER="clnadm";
 const ADMIN_PASS="clnadm";
+
 const storeKey="cln_keys_v1";
 let keys=JSON.parse(localStorage.getItem(storeKey)||"[]");
+
 const $=id=>document.getElementById(id);
 
+// ===== LOGIN =====
 function login(){
   if($("u").value===ADMIN_USER && $("p").value===ADMIN_PASS){
     $("login").classList.add("hidden");
     $("panel").classList.remove("hidden");
     render();
-  }else $("lmsg").textContent="Credenciais inválidas.";
+  }else{
+    $("lmsg").textContent="Usuário ou senha incorretos.";
+  }
 }
 
+// ===== RANDOM =====
 function rnd(){
   const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let s=""; for(let i=0;i<5;i++) s+=c[Math.random()*c.length|0];
+  let s="";
+  for(let i=0;i<5;i++) s+=c[Math.floor(Math.random()*c.length)];
   return s;
 }
 
-<script>
+// ===== GERAR KEY =====
 function generate(){
   const prefix = $("prefix").value.toUpperCase() || "CLN";
   const exp = $("exp").value;
@@ -180,30 +187,72 @@ function generate(){
   let tag = "";
   let expAt = null;
 
-  if(exp === "1"){
-    tag = "DIARIO";
-    expAt = Date.now() + 1 * 86400000;
+  if(exp==="1"){
+    tag="DIARIO";
+    expAt=Date.now()+86400000;
   }
-  else if(exp === "7"){
-    tag = "SEMANAL";
-    expAt = Date.now() + 7 * 86400000;
+  else if(exp==="7"){
+    tag="SEMANAL";
+    expAt=Date.now()+7*86400000;
   }
-  else if(exp === "30"){
-    tag = "MENSAL";
-    expAt = Date.now() + 30 * 86400000;
+  else if(exp==="30"){
+    tag="MENSAL";
+    expAt=Date.now()+30*86400000;
   }
-  else if(exp === "life"){
-    tag = "LIFETIME";
-    expAt = null;
+  else if(exp==="life"){
+    tag="LIFETIME";
+    expAt=null;
   }
 
   const key = `${prefix}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
-
-  keys.unshift({ key, expAt });
-  localStorage.setItem(storeKey, JSON.stringify(keys));
+  keys.unshift({key,expAt});
+  localStorage.setItem(storeKey,JSON.stringify(keys));
   render();
 }
-</script>
+
+// ===== VALIDAR =====
+function validate(){
+  const k=$("check").value.trim();
+  const f=keys.find(x=>x.key===k);
+  if(!f){
+    $("vmsg").innerHTML="<span class='warn'>Key inválida.</span>";
+    return;
+  }
+  if(f.expAt && Date.now()>f.expAt){
+    $("vmsg").innerHTML="<span class='warn'>Key expirada.</span>";
+    return;
+  }
+  $("vmsg").innerHTML="<span class='ok'>Key válida.</span>";
+}
+
+// ===== RENDER =====
+function render(){
+  $("list").innerHTML="";
+  keys.forEach(x=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`<b>${x.key}</b><br>
+      <small>Expira: ${x.expAt?new Date(x.expAt).toLocaleDateString("pt-BR"):"Lifetime"}</small>`;
+    $("list").appendChild(d);
+  });
+  $("now").textContent=new Date().toLocaleString("pt-BR");
+}
+
+// ===== EXTRAS =====
+function clearKeys(){
+  if(confirm("Deseja excluir todas as keys?")){
+    keys=[];
+    localStorage.removeItem(storeKey);
+    render();
+  }
+}
+
+function openKeys(){
+  window.open(
+    "https://github.com/maskaradevxan/keygenerator/edit/main/keys.txt",
+    "_blank"
+  );
+}
 </script>
 </body>
 </html>
