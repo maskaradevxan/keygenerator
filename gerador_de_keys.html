@@ -1,214 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bypass CLN • Gerador de Keys</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bypass CLN • Gerador de Keys</title>
 
-  <style>
-    :root{
-      --bg:#0b0203;
-      --panel:#140405;
-      --red:#c1121f;
-      --red-2:#8a0e14;
-      --txt:#f5f5f5;
-      --muted:#c9a1a4;
-      --ok:#3ddc97;
-    }
-    *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{
-      margin:0;min-height:100vh;
-      background:radial-gradient(1200px 600px at 10% -10%, #2a070a, transparent),
-                 linear-gradient(180deg,#070102,#120304 60%,#070102);
-      color:var(--txt);
-      display:flex;align-items:center;justify-content:center;
-    }
-    .wrap{width:100%;max-width:980px;padding:24px}
-    .card{
-      background:linear-gradient(180deg,#180405,#0f0203);
-      border:1px solid #2a070a;
-      border-radius:14px;
-      box-shadow:0 30px 80px rgba(0,0,0,.6);
-      overflow:hidden;
-    }
-    header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:18px 22px;border-bottom:1px solid #2a070a;
-    }
-    .brand{display:flex;gap:10px;align-items:center}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
-    h1{font-size:18px;margin:0}
-    .grid{display:grid;grid-template-columns:320px 1fr}
-    aside{border-right:1px solid #2a070a}
-    main{padding:22px}
-    .pane{padding:22px}
-    .title{font-size:14px;margin-bottom:6px}
-    .desc{font-size:12px;color:var(--muted);margin-bottom:14px}
-    .field{margin-bottom:12px}
-    .field label{font-size:12px}
-    .field input, select{
-      width:100%;padding:10px;border-radius:10px;
-      border:1px solid #3b0a0e;background:#0a0203;color:#fff
-    }
-    .btn{
-      padding:10px 14px;border-radius:12px;
-      border:1px solid #3b0a0e;
-      background:linear-gradient(180deg,var(--red),var(--red-2));
-      color:#fff;cursor:pointer
-    }
-    .btn.secondary{background:#120304}
-    .hidden{display:none}
-    .ok{color:var(--ok)}
-    .warn{color:#ffd1d4}
-    .list{display:grid;gap:10px}
-    .item{
-      background:#0a0203;border:1px solid #2a070a;
-      border-radius:12px;padding:12px
-    }
-    footer{
-      padding:14px 22px;border-top:1px solid #2a070a;
-      font-size:12px;color:var(--muted);
-      display:flex;justify-content:space-between
-    }
-  </style>
+<style>
+:root{
+  --red:#c1121f;
+  --red2:#8a0e14;
+  --bg:#070102;
+  --panel:#0f0203;
+  --txt:#f5f5f5;
+  --muted:#c9a1a4;
+  --ok:#3ddc97;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,Arial}
+body{
+  margin:0;min-height:100vh;
+  background:linear-gradient(180deg,#070102,#120304);
+  display:flex;justify-content:center;align-items:center;color:var(--txt)
+}
+.wrap{max-width:980px;width:100%;padding:24px}
+.card{
+  background:linear-gradient(180deg,#180405,#0f0203);
+  border:1px solid #2a070a;border-radius:14px;overflow:hidden
+}
+header{
+  padding:18px 22px;border-bottom:1px solid #2a070a;
+  display:flex;align-items:center;gap:10px
+}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--red)}
+h1{font-size:18px;margin:0}
+.hidden{display:none}
+.pane{padding:22px}
+.title{font-size:14px;margin-bottom:6px}
+.desc{font-size:12px;color:var(--muted);margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{font-size:12px}
+.field input,select{
+  width:100%;padding:10px;border-radius:10px;
+  background:#0a0203;border:1px solid #3b0a0e;color:#fff
+}
+.btn{
+  padding:10px 14px;border-radius:12px;
+  background:linear-gradient(180deg,var(--red),var(--red2));
+  border:1px solid #3b0a0e;color:#fff;cursor:pointer
+}
+.btn.secondary{background:#120304}
+.btn.danger{background:#2a070a}
+.grid{display:grid;grid-template-columns:320px 1fr}
+aside{border-right:1px solid #2a070a}
+main{padding:22px}
+.list{display:grid;gap:10px}
+.item{
+  background:#0a0203;border:1px solid #2a070a;
+  border-radius:12px;padding:12px
+}
+.ok{color:var(--ok)}
+.warn{color:#ffd1d4}
+footer{
+  padding:14px 22px;border-top:1px solid #2a070a;
+  font-size:12px;color:var(--muted);
+  display:flex;justify-content:space-between
+}
+</style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="card">
+<div class="card">
 
-    <header>
-      <div class="brand">
-        <span class="dot"></span>
-        <h1>Sensi CLN</h1>
-      </div>
-    </header>
+<header>
+  <span class="dot"></span>
+  <h1>Sensi CLN</h1>
+</header>
 
-    <!-- LOGIN -->
-    <section id="login" class="pane">
-      <div class="title">Acesso restrito</div>
-      <div class="desc">Entre com login de administrador.</div>
+<!-- LOGIN -->
+<section id="login" class="pane">
+  <div class="title">Acesso restrito</div>
+  <div class="desc">Login administrador</div>
 
-      <div class="field">
-        <label>Usuário</label>
-        <input id="u" placeholder="Usuário">
-      </div>
-
-      <div class="field">
-        <label>Senha</label>
-        <input id="p" type="password" placeholder="••••••">
-      </div>
-
-      <button class="btn" onclick="login()">Entrar</button>
-      <div id="lmsg" class="desc"></div>
-    </section>
-
-    <!-- PAINEL -->
-    <section id="panel" class="hidden">
-      <div class="grid">
-        <aside>
-          <div class="pane">
-            <div class="title">Gerar Key</div>
-            <div class="desc">Modelo: CLN-XXXXX-XXXXX-XXXXX</div>
-
-            <div class="field">
-              <label>Prefixo</label>
-              <input id="prefix" value="CLN">
-            </div>
-
-            <div class="field">
-              <label>Expiração</label>
-              <select id="exp">
-                <option value="1">1 dia</option>
-                <option value="7">7 dias</option>
-                <option value="30">30 dias</option>
-                <option value="life">Lifetime</option>
-              </select>
-            </div>
-
-            <button class="btn" onclick="generate()">Gerar</button>
-          </div>
-        </aside>
-
-        <main>
-          <div class="title">Validação</div>
-          <div class="desc">Cole a key para validar</div>
-
-          <input id="check" placeholder="CLN-XXXXX-XXXXX-XXXXX">
-          <button class="btn secondary" onclick="validate()">Validar</button>
-          <div id="vmsg" class="desc"></div>
-
-          <hr style="border-color:#2a070a;margin:18px 0">
-
-          <div class="title">Keys Geradas</div>
-          <div id="list" class="list"></div>
-        </main>
-      </div>
-
-      <footer>
-        <span>Modo privado ativo</span>
-        <span id="now"></span>
-      </footer>
-    </section>
-
+  <div class="field">
+    <label>Usuário</label>
+    <input id="u">
   </div>
+
+  <div class="field">
+    <label>Senha</label>
+    <input id="p" type="password">
+  </div>
+
+  <button class="btn" onclick="login()">Entrar</button>
+  <div id="lmsg" class="desc"></div>
+</section>
+
+<!-- PAINEL -->
+<section id="panel" class="hidden">
+<div class="grid">
+
+<aside>
+  <div class="pane">
+    <div class="title">Gerar Key</div>
+    <div class="desc">CLN-XXXXX-XXXXX-XXXXX</div>
+
+    <div class="field">
+      <label>Prefixo</label>
+      <input id="prefix" value="CLN">
+    </div>
+
+    <div class="field">
+      <label>Expiração</label>
+      <select id="exp">
+        <option value="1">1 dia</option>
+        <option value="7">7 dias</option>
+        <option value="30">30 dias</option>
+        <option value="life">Lifetime</option>
+      </select>
+    </div>
+
+    <button class="btn" onclick="generate()">Gerar</button>
+
+    <hr style="border-color:#2a070a;margin:16px 0">
+
+    <button class="btn secondary" onclick="openKeys()">Editar keys.txt</button>
+    <button class="btn danger" onclick="clearKeys()">Excluir todas keys</button>
+  </div>
+</aside>
+
+<main>
+  <div class="title">Validação</div>
+  <input id="check" placeholder="CLN-XXXXX-XXXXX-XXXXX">
+  <button class="btn secondary" onclick="validate()">Validar</button>
+  <div id="vmsg" class="desc"></div>
+
+  <hr style="border-color:#2a070a;margin:18px 0">
+
+  <div class="title">Keys Geradas</div>
+  <div id="list" class="list"></div>
+</main>
+
+</div>
+
+<footer>
+  <span>Modo privado ativo</span>
+  <span id="now"></span>
+</footer>
+</section>
+
+</div>
 </div>
 
 <script>
-  // ===== LOGIN =====
-  const ADMIN_USER = "clnadm";
-  const ADMIN_PASS = "clnadm";
+const ADMIN_USER="clnadm";
+const ADMIN_PASS="clnadm";
+const storeKey="cln_keys_v1";
+let keys=JSON.parse(localStorage.getItem(storeKey)||"[]");
+const $=id=>document.getElementById(id);
 
-  const storeKey = "cln_keys_v1";
-  const keys = JSON.parse(localStorage.getItem(storeKey) || "[]");
+function login(){
+  if($("u").value===ADMIN_USER && $("p").value===ADMIN_PASS){
+    $("login").classList.add("hidden");
+    $("panel").classList.remove("hidden");
+    render();
+  }else $("lmsg").textContent="Credenciais inválidas.";
+}
 
-  const $ = id => document.getElementById(id);
+function rnd(){
+  const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let s=""; for(let i=0;i<5;i++) s+=c[Math.random()*c.length|0];
+  return s;
+}
 
-  function login(){
-    if($("u").value === ADMIN_USER && $("p").value === ADMIN_PASS){
-      $("login").classList.add("hidden");
-      $("panel").classList.remove("hidden");
-      render();
-    } else {
-      $("lmsg").textContent = "Usuário ou senha incorretos.";
-    }
-  }
+function generate(){
+  const p=$("prefix").value.toUpperCase();
+  const e=$("exp").value;
+  const expAt=e==="life"?null:Date.now()+e*86400000;
+  keys.unshift({key:`${p}-${rnd()}-${rnd()}-${rnd()}`,expAt});
+  localStorage.setItem(storeKey,JSON.stringify(keys));
+  render();
+}
 
-  function rnd(){
-    const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let r = "";
-    for(let i=0;i<5;i++) r += c[Math.floor(Math.random()*c.length)];
-    return r;
-  }
+function validate(){
+  const k=$("check").value.trim();
+  const f=keys.find(x=>x.key===k);
+  if(!f){$("vmsg").innerHTML="<span class='warn'>Key inválida.</span>";return;}
+  if(f.expAt && Date.now()>f.expAt){$("vmsg").innerHTML="<span class='warn'>Key expirada.</span>";return;}
+  $("vmsg").innerHTML="<span class='ok'>Key válida.</span>";
+}
 
-  function generate(){
-    const p = $("prefix").value.toUpperCase();
-    const e = $("exp").value;
-    const expAt = e === "life" ? null : Date.now() + e*86400000;
-    const key = `${p}-${rnd()}-${rnd()}-${rnd()}`;
-    keys.unshift({key, expAt});
-    localStorage.setItem(storeKey, JSON.stringify(keys));
+function render(){
+  $("list").innerHTML="";
+  keys.forEach(x=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.innerHTML=`<b>${x.key}</b><br><small>Expira: ${x.expAt?new Date(x.expAt).toLocaleDateString("pt-BR"):"Lifetime"}</small>`;
+    $("list").appendChild(d);
+  });
+  $("now").textContent=new Date().toLocaleString("pt-BR");
+}
+
+function clearKeys(){
+  if(confirm("Deseja excluir todas as keys?")){
+    keys=[];
+    localStorage.removeItem(storeKey);
     render();
   }
+}
 
-  function validate(){
-    const k = $("check").value.trim();
-    const f = keys.find(x=>x.key===k);
-    if(!f){ $("vmsg").innerHTML = "<span class='warn'>Key inválida.</span>"; return; }
-    if(f.expAt && Date.now()>f.expAt){ $("vmsg").innerHTML = "<span class='warn'>Key expirada.</span>"; return; }
-    $("vmsg").innerHTML = "<span class='ok'>Key válida.</span>";
-  }
-
-  function render(){
-    $("list").innerHTML="";
-    keys.forEach(x=>{
-      const d=document.createElement("div");
-      d.className="item";
-      d.innerHTML=`<b>${x.key}</b><br><small>Expira: ${x.expAt?new Date(x.expAt).toLocaleDateString("pt-BR"):"Lifetime"}</small>`;
-      $("list").appendChild(d);
-    });
-    $("now").textContent = new Date().toLocaleString("pt-BR");
-  }
+function openKeys(){
+  window.open(
+    "https://github.com/maskaradevxan/keygenerator/edit/main/keys.txt",
+    "_blank"
+  );
+}
 </script>
 </body>
 </html>
