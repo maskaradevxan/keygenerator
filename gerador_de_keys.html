@@ -102,7 +102,7 @@ footer{
 <aside>
   <div class="pane">
     <div class="title">Gerar Key</div>
-    <div class="desc">CLN-XXXXX-XXXXX-XXXXX</div>
+    <div class="desc">BLACKLIST-XXXXX-XXXXX</div>
 
     <div class="field">
       <label>Prefixo</label>
@@ -112,9 +112,9 @@ footer{
     <div class="field">
       <label>Expiração</label>
       <select id="exp">
-        <option value="1">1 dia</option>
         <option value="7">7 dias</option>
         <option value="30">30 dias</option>
+        <option value="90">90 dias</option>
         <option value="life">Lifetime</option>
       </select>
     </div>
@@ -152,8 +152,8 @@ footer{
 </div>
 
 <script>
-const ADMIN_USER="clnadm";
-const ADMIN_PASS="clnadm";
+const ADMIN_USER="1";
+const ADMIN_PASS="1";
 const storeKey="cln_keys_v1";
 let keys=JSON.parse(localStorage.getItem(storeKey)||"[]");
 const $=id=>document.getElementById(id);
@@ -210,7 +210,7 @@ function clearKeys(){
 
 function openKeys(){
   window.open(
-    "https://github.com/maskaradevxan/keygenerator/edit/main/keys.txt",
+    "https://github.com/maskaradevxan/keygenerator/edit/main/keys_validas.txt",
     "_blank"
   );
 }
