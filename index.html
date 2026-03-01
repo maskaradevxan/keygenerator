@@ -102,7 +102,7 @@ footer{
 <aside>
   <div class="pane">
     <div class="title">Gerar Key</div>
-    <div class="desc">BLACKLIST-XXXXX-XXXXX</div>
+    <div class="desc">BLACKLIST-XXXX-XXXX</div>
 
     <div class="field">
       <label>Prefixo</label>
@@ -130,7 +130,7 @@ footer{
 
 <main>
   <div class="title">Validação</div>
-  <input id="check" placeholder="BLACKLIST-XXXXX-XXXXX">
+  <input id="check" placeholder="BLACKLIST-XXXX-XXX">
   <button class="btn secondary" onclick="validate()">Validar</button>
   <div id="vmsg" class="desc"></div>
 
@@ -175,13 +175,13 @@ function login(){
 function rnd(){
   const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let s="";
-  for(let i=0;i<5;i++) s+=c[Math.floor(Math.random()*c.length)];
+  for(let i=0;i<4;i++) s+=c[Math.floor(Math.random()*c.length)];
   return s;
 }
 
 // ===== GERAR KEY =====
 function generate(){
-  const prefix = $("prefix").value.toUpperCase() || "CLN";
+  const prefix = $("prefix").value.toUpperCase() || "BLACKLIST";
   const exp = $("exp").value;
 
   let tag = "";
@@ -189,15 +189,15 @@ function generate(){
 
   if(exp==="7"){
     tag="SEMANAL";
-    expAt=Date.now()+86400000;
+    expAt=Date.now()+7*86400000; // Corrigido para 7 dias
   }
   else if(exp==="30"){
     tag="MENSAL";
-    expAt=Date.now()+7*86400000;
+    expAt=Date.now()+30*86400000; // Corrigido para 30 dias
   }
   else if(exp==="90"){
     tag="TRIMENSAL";
-    expAt=Date.now()+30*86400000;
+    expAt=Date.now()+90*86400000; // Corrigido para 90 dias
   }
   else if(exp==="life"){
     tag="LIFETIME";
@@ -214,15 +214,39 @@ function generate(){
 function validate(){
   const k=$("check").value.trim();
   const f=keys.find(x=>x.key===k);
+  
   if(!f){
     $("vmsg").innerHTML="<span class='warn'>Key inválida.</span>";
     return;
   }
+  
   if(f.expAt && Date.now()>f.expAt){
     $("vmsg").innerHTML="<span class='warn'>Key expirada.</span>";
     return;
   }
-  $("vmsg").innerHTML="<span class='ok'>Key válida.</span>";
+  
+  // Key válida - abre o link de edição com a key para adicionar ao arquivo
+  $("vmsg").innerHTML="<span class='ok'>Key válida! Adicionando ao arquivo...</span>";
+  
+  // Abre o GitHub em modo de edição com instruções para adicionar a key
+  const githubUrl = "https://github.com/maskaradevxan/keygenerator/edit/main/keys_validas.txt";
+  
+  // Cria um aviso para o usuário copiar a key
+  const keyInfo = `Key validada com sucesso: ${k}\n\nPor favor, adicione esta key ao arquivo keys_validas.txt no GitHub.`;
+  
+  // Mostra um alert com a key e instruções
+  alert(keyInfo);
+  
+  // Abre o GitHub para edição
+  window.open(githubUrl, "_blank");
+  
+  // Opcional: Salva a key validada no localStorage para referência
+  const validatedKeys = JSON.parse(localStorage.getItem("validated_keys") || "[]");
+  validatedKeys.push({
+    key: k,
+    validatedAt: new Date().toISOString()
+  });
+  localStorage.setItem("validated_keys", JSON.stringify(validatedKeys));
 }
 
 // ===== RENDER =====
