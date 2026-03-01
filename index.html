@@ -102,7 +102,7 @@ footer{
 <aside>
   <div class="pane">
     <div class="title">Gerar Key</div>
-    <div class="desc">BLACKLIST-XXXX</div>
+    <div class="desc">BLACKLIST-XXXX-XXXX</div>
 
     <div class="field">
       <label>Prefixo</label>
@@ -130,7 +130,7 @@ footer{
 
 <main>
   <div class="title">Validação</div>
-  <input id="check" placeholder="BLACKLIST-XXXX">
+  <input id="check" placeholder="BLACKLIST-XXXX-XXXX">
   <button class="btn secondary" onclick="validate()">Validar</button>
   <div id="vmsg" class="desc"></div>
 
@@ -175,7 +175,7 @@ function login(){
 function rnd(){
   const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let s="";
-  for(let i=0;i<4;i++) s+=c[Math.floor(Math.random()*c.length)];
+  for(let i=0;i<3;i++) s+=c[Math.floor(Math.random()*c.length)];
   return s;
 }
 
