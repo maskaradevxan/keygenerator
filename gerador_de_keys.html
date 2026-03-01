@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bypass CLN • Gerador de Keys</title>
+<title>Key Generator - Blacklist Bypass</title>
 
 <style>
 :root{
@@ -73,7 +73,7 @@ footer{
 
 <header>
   <span class="dot"></span>
-  <h1>Sensi CLN</h1>
+  <h1>BlacklistRBX</h1>
 </header>
 
 <!-- LOGIN -->
@@ -106,13 +106,13 @@ footer{
 
     <div class="field">
       <label>Prefixo</label>
-      <input id="prefix" value="CLN">
+      <input id="prefix" value="BLACKLIST">
     </div>
 
     <div class="field">
       <label>Expiração</label>
       <select id="exp">
-        <option value="7">7 dias</option>
+        <option value="7">7 dia</option>
         <option value="30">30 dias</option>
         <option value="90">90 dias</option>
         <option value="life">Lifetime</option>
@@ -130,7 +130,7 @@ footer{
 
 <main>
   <div class="title">Validação</div>
-  <input id="check" placeholder="CLN-XXXXX-XXXXX-XXXXX">
+  <input id="check" placeholder="BLACKLIST-XXXXX-XXXXX">
   <button class="btn secondary" onclick="validate()">Validar</button>
   <div id="vmsg" class="desc"></div>
 
@@ -154,52 +154,91 @@ footer{
 <script>
 const ADMIN_USER="1";
 const ADMIN_PASS="1";
-const storeKey="cln_keys_v1";
+
+const storeKey="blacklist_keys_v1";
 let keys=JSON.parse(localStorage.getItem(storeKey)||"[]");
+
 const $=id=>document.getElementById(id);
 
+// ===== LOGIN =====
 function login(){
   if($("u").value===ADMIN_USER && $("p").value===ADMIN_PASS){
     $("login").classList.add("hidden");
     $("panel").classList.remove("hidden");
     render();
-  }else $("lmsg").textContent="Credenciais inválidas.";
+  }else{
+    $("lmsg").textContent="Usuário ou senha incorretos.";
+  }
 }
 
+// ===== RANDOM =====
 function rnd(){
   const c="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let s=""; for(let i=0;i<5;i++) s+=c[Math.random()*c.length|0];
+  let s="";
+  for(let i=0;i<5;i++) s+=c[Math.floor(Math.random()*c.length)];
   return s;
 }
 
+// ===== GERAR KEY =====
 function generate(){
-  const p=$("prefix").value.toUpperCase();
-  const e=$("exp").value;
-  const expAt=e==="life"?null:Date.now()+e*86400000;
-  keys.unshift({key:`${p}-${rnd()}-${rnd()}-${rnd()}`,expAt});
+  const prefix = $("prefix").value.toUpperCase() || "CLN";
+  const exp = $("exp").value;
+
+  let tag = "";
+  let expAt = null;
+
+  if(exp==="7"){
+    tag="SEMANAL";
+    expAt=Date.now()+86400000;
+  }
+  else if(exp==="30"){
+    tag="MENSAL";
+    expAt=Date.now()+7*86400000;
+  }
+  else if(exp==="90"){
+    tag="TRIMENSAL";
+    expAt=Date.now()+30*86400000;
+  }
+  else if(exp==="life"){
+    tag="LIFETIME";
+    expAt=null;
+  }
+
+  const key = `${prefix}-${tag}-${rnd()}-${rnd()}-${rnd()}`;
+  keys.unshift({key,expAt});
   localStorage.setItem(storeKey,JSON.stringify(keys));
   render();
 }
 
+// ===== VALIDAR =====
 function validate(){
   const k=$("check").value.trim();
   const f=keys.find(x=>x.key===k);
-  if(!f){$("vmsg").innerHTML="<span class='warn'>Key inválida.</span>";return;}
-  if(f.expAt && Date.now()>f.expAt){$("vmsg").innerHTML="<span class='warn'>Key expirada.</span>";return;}
+  if(!f){
+    $("vmsg").innerHTML="<span class='warn'>Key inválida.</span>";
+    return;
+  }
+  if(f.expAt && Date.now()>f.expAt){
+    $("vmsg").innerHTML="<span class='warn'>Key expirada.</span>";
+    return;
+  }
   $("vmsg").innerHTML="<span class='ok'>Key válida.</span>";
 }
 
+// ===== RENDER =====
 function render(){
   $("list").innerHTML="";
   keys.forEach(x=>{
     const d=document.createElement("div");
     d.className="item";
-    d.innerHTML=`<b>${x.key}</b><br><small>Expira: ${x.expAt?new Date(x.expAt).toLocaleDateString("pt-BR"):"Lifetime"}</small>`;
+    d.innerHTML=`<b>${x.key}</b><br>
+      <small>Expira: ${x.expAt?new Date(x.expAt).toLocaleDateString("pt-BR"):"Lifetime"}</small>`;
     $("list").appendChild(d);
   });
   $("now").textContent=new Date().toLocaleString("pt-BR");
 }
 
+// ===== EXTRAS =====
 function clearKeys(){
   if(confirm("Deseja excluir todas as keys?")){
     keys=[];
